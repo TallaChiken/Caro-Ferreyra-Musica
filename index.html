@@ -28,8 +28,16 @@
             scroll-margin-top: 5rem;
         }
 
-        /* Prevenir que el contenido se vea antes de cargar React */
-        [v-cloak] { display: none; }
+        /* Estilo para diagnosticar carga */
+        #root:empty::before {
+            content: 'Cargando aplicación...';
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
     </style>
 <script type="importmap">
 {
@@ -46,7 +54,8 @@
 </head>
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
-    <!-- Punto de entrada explícito para el navegador -->
+    <!-- Nota importante: Si subes archivos .tsx directamente a Netlify sin un paso de build (Vite/Webpack), 
+         el navegador no los entenderá. Asegúrate de que Netlify esté ejecutando un comando de construcción. -->
     <script type="module" src="./index.tsx"></script>
 <script type="module" src="/index.tsx"></script>
 </body>

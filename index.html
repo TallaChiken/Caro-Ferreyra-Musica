@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carolina Ferreyra | Cantante</title>
+    <title>Carolina Ferreyra | Cantante Oficial</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,17 +24,21 @@
         .border-primary { border-color: var(--primary-color); }
         .hover-bg-primary:hover { background-color: var(--primary-color); filter: brightness(90%); }
         
-        /* Ajuste para que el fixed navbar no tape las secciones al navegar */
         section {
             scroll-margin-top: 5rem;
         }
+
+        /* Prevenir que el contenido se vea antes de cargar React */
+        [v-cloak] { display: none; }
     </style>
 <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
   }
 }
 </script>
@@ -42,6 +46,8 @@
 </head>
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
+    <!-- Punto de entrada explícito para el navegador -->
+    <script type="module" src="./index.tsx"></script>
 <script type="module" src="/index.tsx"></script>
 </body>
 </html>

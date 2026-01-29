@@ -28,7 +28,6 @@
             scroll-margin-top: 5rem;
         }
 
-        /* Estilo para diagnosticar carga */
         #root:empty::before {
             content: 'Cargando aplicación...';
             display: flex;
@@ -54,8 +53,6 @@
 </head>
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
-    <!-- Nota importante: Si subes archivos .tsx directamente a Netlify sin un paso de build (Vite/Webpack), 
-         el navegador no los entenderá. Asegúrate de que Netlify esté ejecutando un comando de construcción. -->
     <script type="module" src="./index.tsx"></script>
 <script type="module" src="/index.tsx"></script>
 </body>

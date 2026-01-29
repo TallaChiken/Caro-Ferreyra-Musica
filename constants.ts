@@ -1,13 +1,15 @@
 
-import { AppData } from './types';
+import { AppData } from './types.ts';
 
 export const INITIAL_DATA: AppData = {
   primaryColor: '#4169E1',
   aboutText: 'Carolina Ferreyra es una apasionada cantante de la Ciudad de Córdoba, Argentina. Con una voz que fusiona la calidez del folklore con la frescura del pop contemporáneo, ha recorrido los escenarios más emblemáticos de la provincia, llevando su mensaje de amor y tradición. Criada en un entorno musical, su arte refleja la esencia del ser cordobés.',
-  heroImageUrl: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80&w=1920',
-  heroImageUrlSecondary: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=1920',
-  aboutImageUrl: 'https://picsum.photos/id/64/800/1000',
-  presentationsImageUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=1200&h=400',
+  // Usamos rutas absolutas desde la raíz del sitio. 
+  // Esto funcionará si la carpeta Images está en la raíz de la carpeta desplegada.
+  heroImageUrl: '/Images/hero.jpg', 
+  heroImageUrlSecondary: '/Images/hero-mobile.jpg',
+  aboutImageUrl: '/Images/sobre-mi.jpg',
+  presentationsImageUrl: '/Images/banner-shows.jpg',
   songs: [
     { id: '1', title: 'Zamba de mi Esperanza', youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
     { id: '2', title: 'Luna Cordobesa', youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }

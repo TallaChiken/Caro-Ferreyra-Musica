@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { AppData, Song, Presentation } from '../types';
+import { INITIAL_DATA } from '../constants';
 
 interface StaffPanelProps {
   data: AppData;
@@ -28,6 +29,14 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
   const handleSave = () => {
     onUpdate(editData);
     alert('Configuración guardada correctamente.');
+  };
+
+  const handleReset = () => {
+    if (confirm('¿Estás seguro de que quieres restablecer todos los valores originales? Se perderán los cambios que no hayas guardado.')) {
+      setEditData(INITIAL_DATA);
+      onUpdate(INITIAL_DATA);
+      alert('Valores restablecidos. No olvides presionar "Guardar Todo" si quieres que este cambio sea permanente.');
+    }
   };
 
   if (!isLoggedIn) {
@@ -82,13 +91,13 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
         <div className="flex gap-4">
           <button 
             onClick={handleSave}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700"
+            className="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 transition-colors"
           >
             Guardar Todo
           </button>
           <button 
             onClick={onExit}
-            className="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-bold hover:bg-slate-300"
+            className="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-bold hover:bg-slate-300 transition-colors"
           >
             Salir
           </button>
@@ -96,25 +105,35 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
       </header>
 
       <div className="max-w-4xl mx-auto p-8 space-y-12">
+        {/* Acciones Rápidas */}
+        <div className="flex justify-end">
+          <button 
+            onClick={handleReset}
+            className="text-xs bg-slate-200 text-slate-500 px-3 py-1 rounded hover:bg-red-100 hover:text-red-600 transition-all uppercase tracking-wider font-bold"
+          >
+            Restablecer valores por defecto
+          </button>
+        </div>
+
         {/* Imágenes del Sitio */}
         <section className="bg-white p-6 rounded-xl shadow-sm border">
           <h2 className="text-xl font-bold mb-4">Gestión de Imágenes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-4 bg-slate-50 rounded-lg border">
-              <label className="block text-sm font-bold mb-1">Portada Principal (Hero)</label>
-              <p className="text-xs text-slate-500 mb-2 italic">Medida sugerida: 1920x1080px (Horizontal)</p>
+              <label className="block text-sm font-bold mb-1">Portada Principal (Hero - PC)</label>
+              <p className="text-xs text-slate-500 mb-2 italic">Ej: /Images/hero.jpg</p>
               <input 
                 type="text" 
-                placeholder="Link imagen 1"
+                placeholder="Link imagen PC"
                 className="w-full border p-2 rounded text-sm mb-4"
                 value={editData.heroImageUrl}
                 onChange={(e) => setEditData({...editData, heroImageUrl: e.target.value})}
               />
-              <label className="block text-sm font-bold mb-1">Portada Alternativa (Móvil)</label>
-              <p className="text-xs text-slate-500 mb-2 italic">Medida sugerida: 1080x1920px (Vertical)</p>
+              <label className="block text-sm font-bold mb-1">Portada Móvil (Vertical)</label>
+              <p className="text-xs text-slate-500 mb-2 italic">Ej: /Images/hero-mobile.jpg</p>
               <input 
                 type="text" 
-                placeholder="Link imagen 2"
+                placeholder="Link imagen Móvil"
                 className="w-full border p-2 rounded text-sm"
                 value={editData.heroImageUrlSecondary}
                 onChange={(e) => setEditData({...editData, heroImageUrlSecondary: e.target.value})}
@@ -122,7 +141,7 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
             </div>
             <div className="p-4 bg-slate-50 rounded-lg border">
               <label className="block text-sm font-bold mb-1">Imagen "Sobre Mí"</label>
-              <p className="text-xs text-slate-500 mb-2 italic">Medida sugerida: 800x1000px (Vertical)</p>
+              <p className="text-xs text-slate-500 mb-2 italic">Ej: /Images/sobre-mi.jpg</p>
               <input 
                 type="text" 
                 placeholder="Link imagen Sobre Mí"
@@ -131,7 +150,7 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
                 onChange={(e) => setEditData({...editData, aboutImageUrl: e.target.value})}
               />
               <label className="block text-sm font-bold mb-1">Banner "Presentaciones"</label>
-              <p className="text-xs text-slate-500 mb-2 italic">Medida sugerida: 1200x400px (Banner)</p>
+              <p className="text-xs text-slate-500 mb-2 italic">Ej: /Images/banner-shows.jpg</p>
               <input 
                 type="text" 
                 placeholder="Link imagen Presentaciones"

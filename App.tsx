@@ -63,7 +63,7 @@ const App: React.FC = () => {
     return (
       <main>
         <section id="inicio">
-          <Hero imageUrl={data.heroImageUrl} />
+          <Hero imageUrl={data.heroImageUrl} mobileImageUrl={data.heroImageUrlSecondary} />
         </section>
         <section id="sobre-mi" className="py-20 bg-white">
           <About text={data.aboutText} imageUrl={data.aboutImageUrl} />

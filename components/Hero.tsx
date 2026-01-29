@@ -3,9 +3,10 @@ import React from 'react';
 
 interface HeroProps {
   imageUrl: string;
+  mobileImageUrl?: string;
 }
 
-const Hero: React.FC<HeroProps> = ({ imageUrl }) => {
+const Hero: React.FC<HeroProps> = ({ imageUrl, mobileImageUrl }) => {
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     window.location.hash = id;
@@ -15,11 +16,29 @@ const Hero: React.FC<HeroProps> = ({ imageUrl }) => {
     }
   };
 
+  // Generamos un estilo dinámico para manejar las dos imágenes
+  const backgroundStyle = {
+    '--bg-desktop': `url('${imageUrl}')`,
+    '--bg-mobile': `url('${mobileImageUrl || imageUrl}')`,
+  } as React.CSSProperties;
+
   return (
     <div className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+      <style>
+        {`
+          .hero-bg {
+            background-image: var(--bg-mobile);
+          }
+          @media (min-width: 768px) {
+            .hero-bg {
+              background-image: var(--bg-desktop);
+            }
+          }
+        `}
+      </style>
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105"
-        style={{ backgroundImage: `url('${imageUrl}')` }}
+        className="hero-bg absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105"
+        style={backgroundStyle}
       >
         <div className="absolute inset-0 bg-black/50"></div>
       </div>

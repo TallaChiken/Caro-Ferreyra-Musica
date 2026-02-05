@@ -28,14 +28,25 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
 
   const handleSave = () => {
     onUpdate(editData);
-    alert('Configuración guardada correctamente.');
+    alert('Configuración guardada en tu navegador. Recuerda exportar el JSON para hacerlo permanente.');
+  };
+
+  const handleExportJSON = () => {
+    const jsonString = JSON.stringify(editData, null, 2);
+    navigator.clipboard.writeText(jsonString).then(() => {
+      alert('¡Código de configuración copiado al portapapeles! Pegalo en el chat para que el programador actualice el sitio de forma global.');
+    }).catch(err => {
+      console.error('Error al copiar:', err);
+      alert('No se pudo copiar automáticamente. Puedes copiarlo manualmente desde la consola del navegador.');
+      console.log(jsonString);
+    });
   };
 
   const handleReset = () => {
-    if (confirm('¿Estás seguro de que quieres restablecer todos los valores originales? Se perderán los cambios que no hayas guardado.')) {
+    if (confirm('¿Estás seguro de que quieres restablecer todos los valores originales? Se perderán tus cambios locales.')) {
       setEditData(INITIAL_DATA);
       onUpdate(INITIAL_DATA);
-      alert('Valores restablecidos. No olvides presionar "Guardar Todo" si quieres que este cambio sea permanente.');
+      alert('Valores restablecidos localmente.');
     }
   };
 
@@ -85,33 +96,44 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b sticky top-0 z-10 px-6 py-4 flex justify-between items-center shadow-sm">
+    <div className="min-h-screen bg-slate-50 pb-20">
+      <header className="bg-white border-b sticky top-0 z-10 px-6 py-4 flex flex-wrap justify-between items-center shadow-sm gap-4">
         <h1 className="text-2xl font-serif font-bold text-primary">Panel de Administración</h1>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-2">
+          <button 
+            onClick={handleExportJSON}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+            Exportar para Global
+          </button>
           <button 
             onClick={handleSave}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-green-700 transition-colors"
+            className="bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition-colors"
           >
-            Guardar Todo
+            Guardar Local
           </button>
           <button 
             onClick={onExit}
-            className="bg-slate-200 text-slate-700 px-6 py-2 rounded-lg font-bold hover:bg-slate-300 transition-colors"
+            className="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg font-bold hover:bg-slate-300 transition-colors"
           >
-            Salir
+            Ver Sitio
           </button>
         </div>
       </header>
 
-      <div className="max-w-4xl mx-auto p-8 space-y-12">
-        {/* Acciones Rápidas */}
+      <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-12">
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 text-blue-700 text-sm mb-6">
+          <p className="font-bold">💡 Nota sobre permanencia:</p>
+          <p>Los cambios que hagas aquí se guardan solo en este navegador. Para que todo el mundo los vea, usa el botón <strong>"Exportar para Global"</strong> y envíame el código resultante.</p>
+        </div>
+
         <div className="flex justify-end">
           <button 
             onClick={handleReset}
             className="text-xs bg-slate-200 text-slate-500 px-3 py-1 rounded hover:bg-red-100 hover:text-red-600 transition-all uppercase tracking-wider font-bold"
           >
-            Restablecer valores por defecto
+            Restablecer valores originales
           </button>
         </div>
 
@@ -120,20 +142,16 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
           <h2 className="text-xl font-bold mb-4">Gestión de Imágenes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-4 bg-slate-50 rounded-lg border">
-              <label className="block text-sm font-bold mb-1">Portada Principal (Hero - PC)</label>
-              <p className="text-xs text-slate-500 mb-2 italic">Ej: /Images/hero.jpg</p>
+              <label className="block text-sm font-bold mb-1">Portada Principal (PC)</label>
               <input 
                 type="text" 
-                placeholder="Link imagen PC"
                 className="w-full border p-2 rounded text-sm mb-4"
                 value={editData.heroImageUrl}
                 onChange={(e) => setEditData({...editData, heroImageUrl: e.target.value})}
               />
-              <label className="block text-sm font-bold mb-1">Portada Móvil (Vertical)</label>
-              <p className="text-xs text-slate-500 mb-2 italic">Ej: /Images/hero-mobile.jpg</p>
+              <label className="block text-sm font-bold mb-1">Portada Móvil</label>
               <input 
                 type="text" 
-                placeholder="Link imagen Móvil"
                 className="w-full border p-2 rounded text-sm"
                 value={editData.heroImageUrlSecondary}
                 onChange={(e) => setEditData({...editData, heroImageUrlSecondary: e.target.value})}
@@ -141,19 +159,15 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
             </div>
             <div className="p-4 bg-slate-50 rounded-lg border">
               <label className="block text-sm font-bold mb-1">Imagen "Sobre Mí"</label>
-              <p className="text-xs text-slate-500 mb-2 italic">Ej: /Images/sobre-mi.jpg</p>
               <input 
                 type="text" 
-                placeholder="Link imagen Sobre Mí"
                 className="w-full border p-2 rounded text-sm mb-4"
                 value={editData.aboutImageUrl}
                 onChange={(e) => setEditData({...editData, aboutImageUrl: e.target.value})}
               />
-              <label className="block text-sm font-bold mb-1">Banner "Presentaciones"</label>
-              <p className="text-xs text-slate-500 mb-2 italic">Ej: /Images/banner-shows.jpg</p>
+              <label className="block text-sm font-bold mb-1">Banner "Shows"</label>
               <input 
                 type="text" 
-                placeholder="Link imagen Presentaciones"
                 className="w-full border p-2 rounded text-sm"
                 value={editData.presentationsImageUrl}
                 onChange={(e) => setEditData({...editData, presentationsImageUrl: e.target.value})}
@@ -164,21 +178,21 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
 
         {/* Color Principal */}
         <section className="bg-white p-6 rounded-xl shadow-sm border">
-          <h2 className="text-xl font-bold mb-4">Color Principal del Sitio</h2>
+          <h2 className="text-xl font-bold mb-4">Color Principal</h2>
           <div className="flex items-center gap-4">
             <input 
               type="color" 
-              className="w-16 h-16 rounded cursor-pointer"
+              className="w-12 h-12 rounded cursor-pointer border-0"
               value={editData.primaryColor}
               onChange={(e) => setEditData({...editData, primaryColor: e.target.value})}
             />
-            <span className="text-slate-500 font-mono uppercase">{editData.primaryColor}</span>
+            <span className="text-slate-500 font-mono uppercase font-bold">{editData.primaryColor}</span>
           </div>
         </section>
 
         {/* Sobre Mí */}
         <section className="bg-white p-6 rounded-xl shadow-sm border">
-          <h2 className="text-xl font-bold mb-4">Texto "Sobre Mí"</h2>
+          <h2 className="text-xl font-bold mb-4">Texto Biografía</h2>
           <textarea 
             className="w-full border p-4 rounded-lg h-48 focus:ring-2 focus:ring-primary outline-none"
             value={editData.aboutText}
@@ -189,7 +203,7 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
         {/* Canciones */}
         <section className="bg-white p-6 rounded-xl shadow-sm border">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Gestión de Canciones</h2>
+            <h2 className="text-xl font-bold">Canciones</h2>
             <button 
               onClick={() => {
                 const newSong: Song = { id: Date.now().toString(), title: 'Nueva Canción', youtubeUrl: '' };
@@ -197,16 +211,16 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
               }}
               className="text-primary font-bold hover:underline"
             >
-              + Agregar Canción
+              + Agregar
             </button>
           </div>
           <div className="space-y-4">
             {editData.songs.map((song, index) => (
-              <div key={song.id} className="flex flex-col sm:flex-row gap-4 p-4 bg-slate-50 rounded-lg border">
+              <div key={song.id} className="flex flex-col sm:flex-row gap-2 p-3 bg-slate-50 rounded-lg border">
                 <input 
                   type="text" 
                   placeholder="Título"
-                  className="flex-1 border p-2 rounded"
+                  className="flex-1 border p-2 rounded text-sm"
                   value={song.title}
                   onChange={(e) => {
                     const newSongs = [...editData.songs];
@@ -216,8 +230,8 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
                 />
                 <input 
                   type="text" 
-                  placeholder="Link de YouTube"
-                  className="flex-1 border p-2 rounded"
+                  placeholder="URL YouTube"
+                  className="flex-1 border p-2 rounded text-sm"
                   value={song.youtubeUrl}
                   onChange={(e) => {
                     const newSongs = [...editData.songs];
@@ -229,9 +243,9 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
                   onClick={() => {
                     setEditData({...editData, songs: editData.songs.filter(s => s.id !== song.id)});
                   }}
-                  className="text-red-500 hover:text-red-700"
+                  className="text-red-500 p-2"
                 >
-                  Eliminar
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                 </button>
               </div>
             ))}
@@ -241,29 +255,29 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
         {/* Presentaciones */}
         <section className="bg-white p-6 rounded-xl shadow-sm border">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">Gestión de Presentaciones</h2>
+            <h2 className="text-xl font-bold">Agenda de Shows</h2>
             <button 
               onClick={() => {
                 const newPres: Presentation = { 
                   id: Date.now().toString(), 
                   date: new Date().toISOString().split('T')[0], 
-                  location: 'Ciudad, Provincia', 
-                  venue: 'Nombre del Lugar', 
+                  location: 'Ciudad', 
+                  venue: 'Lugar', 
                   isPast: false 
                 };
                 setEditData({...editData, presentations: [...editData.presentations, newPres]});
               }}
               className="text-primary font-bold hover:underline"
             >
-              + Agregar Show
+              + Agregar
             </button>
           </div>
           <div className="space-y-4">
             {editData.presentations.map((pres, index) => (
-              <div key={pres.id} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 p-4 bg-slate-50 rounded-lg border">
+              <div key={pres.id} className="grid grid-cols-1 sm:grid-cols-5 gap-2 p-3 bg-slate-50 rounded-lg border items-center">
                 <input 
                   type="date" 
-                  className="border p-2 rounded"
+                  className="border p-2 rounded text-sm sm:col-span-1"
                   value={pres.date}
                   onChange={(e) => {
                     const newPres = [...editData.presentations];
@@ -274,7 +288,7 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
                 <input 
                   type="text" 
                   placeholder="Lugar"
-                  className="border p-2 rounded"
+                  className="border p-2 rounded text-sm sm:col-span-1"
                   value={pres.venue}
                   onChange={(e) => {
                     const newPres = [...editData.presentations];
@@ -285,7 +299,7 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
                 <input 
                   type="text" 
                   placeholder="Ciudad"
-                  className="border p-2 rounded"
+                  className="border p-2 rounded text-sm sm:col-span-1"
                   value={pres.location}
                   onChange={(e) => {
                     const newPres = [...editData.presentations];
@@ -294,7 +308,7 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
                   }}
                 />
                 <select 
-                  className="border p-2 rounded"
+                  className="border p-2 rounded text-sm sm:col-span-1"
                   value={pres.isPast ? 'past' : 'upcoming'}
                   onChange={(e) => {
                     const newPres = [...editData.presentations];
@@ -309,9 +323,9 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
                   onClick={() => {
                     setEditData({...editData, presentations: editData.presentations.filter(p => p.id !== pres.id)});
                   }}
-                  className="text-red-500 hover:text-red-700 text-sm font-bold"
+                  className="text-red-500 flex justify-center"
                 >
-                  Eliminar
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                 </button>
               </div>
             ))}
@@ -320,76 +334,53 @@ const StaffPanel: React.FC<StaffPanelProps> = ({ data, onUpdate, onExit }) => {
 
         {/* Contacto & Redes */}
         <section className="bg-white p-6 rounded-xl shadow-sm border">
-          <h2 className="text-xl font-bold mb-4">Información de Contacto y Redes</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <h2 className="text-xl font-bold mb-4">Contacto y Redes</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold mb-1">Email Público</label>
+              <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Email</label>
               <input 
                 type="email" 
-                className="w-full border p-2 rounded"
+                className="w-full border p-2 rounded text-sm"
                 value={editData.contact.email}
                 onChange={(e) => setEditData({...editData, contact: {...editData.contact, email: e.target.value}})}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1">Teléfono (Texto)</label>
+              <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Teléfono Público</label>
               <input 
                 type="text" 
-                className="w-full border p-2 rounded"
+                className="w-full border p-2 rounded text-sm"
                 value={editData.contact.phone}
                 onChange={(e) => setEditData({...editData, contact: {...editData.contact, phone: e.target.value}})}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1">Usuario Instagram (sin @)</label>
+              <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Instagram (usuario)</label>
               <input 
                 type="text" 
-                className="w-full border p-2 rounded"
+                className="w-full border p-2 rounded text-sm"
                 value={editData.contact.instagram}
                 onChange={(e) => setEditData({...editData, contact: {...editData.contact, instagram: e.target.value}})}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1">Facebook (slug)</label>
+              <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">WhatsApp (num solo)</label>
               <input 
                 type="text" 
-                className="w-full border p-2 rounded"
-                value={editData.contact.facebook}
-                onChange={(e) => setEditData({...editData, contact: {...editData.contact, facebook: e.target.value}})}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-1">Número WhatsApp (sin +)</label>
-              <input 
-                type="text" 
-                className="w-full border p-2 rounded"
+                className="w-full border p-2 rounded text-sm"
                 value={editData.contact.whatsapp}
                 onChange={(e) => setEditData({...editData, contact: {...editData.contact, whatsapp: e.target.value}})}
-              />
-            </div>
-            <div className="md:col-span-2 p-4 bg-slate-50 border rounded-lg">
-              <label className="block text-sm font-bold mb-1 text-primary">Formspree ID (para el formulario)</label>
-              <p className="text-xs text-slate-500 mb-2">
-                Obtené este ID en formspree.io para que los mensajes lleguen a tu correo. 
-                Ej: si tu URL es https://formspree.io/f/mjvgzjwv, el ID es "mjvgzjwv".
-              </p>
-              <input 
-                type="text" 
-                placeholder="mjvgzjwv"
-                className="w-full border p-2 rounded font-mono"
-                value={editData.contact.formspreeId}
-                onChange={(e) => setEditData({...editData, contact: {...editData.contact, formspreeId: e.target.value}})}
               />
             </div>
           </div>
         </section>
 
-        <div className="pb-20 text-center">
+        <div className="text-center pt-10">
            <button 
             onClick={handleSave}
             className="bg-primary text-white px-12 py-4 rounded-xl font-bold text-xl hover:scale-105 transition-transform shadow-lg"
           >
-            Guardar Todos los Cambios
+            Guardar Cambios Locales
           </button>
         </div>
       </div>

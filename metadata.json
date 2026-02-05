@@ -1,0 +1,8 @@
+{
+  "name": "Carolina Ferreyra - Sitio Oficial",
+  "description": "Sitio web oficial para la cantante cordobesa Carolina Ferreyra, con secciones de biografía, canciones, presentaciones y un panel de administración para gestión de contenido.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
